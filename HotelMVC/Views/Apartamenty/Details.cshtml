@@ -1,0 +1,144 @@
+﻿@model HotelMVC.Models.ApartamentyDisplayViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Apartamenty</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nazwa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nazwa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cena)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cena)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IloscOsob)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IloscOsob)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Opis)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Opis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Udogodnienia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Udogodnienia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IloscWizyt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IloscWizyt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ocena)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ocena)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ulica)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ulica)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Miasto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Miasto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KodPocztowy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KodPocztowy)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdApartamentu }) |
+    @Html.ActionLink("Back to List", "MojeApartamenty")
+</p>
+
+<div>
+    <h4>Komentarze</h4>
+    @if (Model.Wizyty == null || !Model.Wizyty.Any(w => !String.IsNullOrEmpty(w.Komentarz)))
+    {
+        <p>Brak komentarzy</p>
+    }
+    else
+    {
+        foreach (var item in Model.Wizyty.Where(w => !String.IsNullOrEmpty(w.Komentarz)).OrderByDescending(d => d.DataOd))
+        {
+            <hr />
+
+            var wiz = new HotelMVC.Models.WizytyDisplayViewModel(item);
+            <i>@wiz.KlientImieNazwisko (wizyta @wiz.DataOd.ToShortDateString() - @wiz.DataDo.ToShortDateString()) skomentował(a) (@Html.DisplayFor(modelItem => item.DataKomentarz)):</i>
+            <p>
+                <b>Ocena:</b> @wiz.Ocena
+            </p>
+            <p>
+                @wiz.Komentarz
+            </p>
+            <div style="margin-left:20px">
+                @if (String.IsNullOrEmpty(item.Odpowiedz))
+                {
+                    if (ViewData["idWizyty"] == null || (int)ViewData["idWizyty"] != item.IdWizyty)
+                    {
+                        @Html.ActionLink("Dodaj odpowiedź", "Details", new { id = item.IdApartamentu, idWizyty = item.IdWizyty })
+                    }
+                    else
+                    {
+                        @Html.Action("Odpowiedz", new { id = item.IdWizyty })
+                    }
+                }
+                else
+                {
+
+                    <i> Odpowiedź właściciela (@Html.DisplayFor(modelItem => item.DataOdpowiedz)):</i>
+                    <p>
+                        @Html.DisplayFor(modelItem => item.Odpowiedz)
+                    </p>
+
+                }
+            </div>
+        }
+    }
+</div>
